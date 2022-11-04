@@ -9,7 +9,9 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.data.EmptyGroup.name
 import androidx.compose.ui.tooling.preview.Preview
+import com.chaquo.python.PyObject
 import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
 import com.example.testcodeforhospitalmanagement.ui.theme.TestCodeForHospitalManagementTheme
@@ -24,7 +26,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting(getPythonTestCode())
+                    Greeting(getData())
                 }
             }
         }
@@ -36,22 +38,28 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun getPythonTestCode(): String {
+    private fun getData(): PyObject? {
         val python = Python.getInstance()
-        val pythonFile = python.getModule("test")
-        return pythonFile.callAttr("test_python",1,2).toString()
+        val pythonFile = python.getModule("script")
+        return pythonFile.callAttr("fetch_data", "Doctor")
     }
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "$name!")
+fun printing(name: PyObject) {
+    var text = ""
+    for (i in name){
+        for (j in i){
+            text  = text + j + " "
+        }
+    }
+    Text(text = "$text")
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    TestCodeForHospitalManagementTheme {
-        Greeting("hello")
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview() {
+//    TestCodeForHospitalManagementTheme {
+//        printing("hello")
+//    }
+//}
